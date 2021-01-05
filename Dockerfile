@@ -1,6 +1,6 @@
-FROM php:5.5-apache
+FROM php:8.0-apache
 
-MAINTAINER Ivica Nedeljkovic <ivica.nedeljkovic@gmail.com>
+# MAINTAINER Ivica Nedeljkovic <ivica.nedeljkovic@gmail.com>
 
 # Dependencies
 ## Freshen apt's cache so it knows where to find files.
@@ -57,9 +57,9 @@ RUN docker-php-ext-install exif
 RUN docker-php-ext-install bcmath
 
 # Install XDebug
-RUN pecl install -o -f xdebug \
-    && rm -rf /tmp/pear
-COPY ./docker/config/php/99-xdebug.ini /usr/local/etc/php/conf.d/
+# RUN pecl install -o -f xdebug \
+#     && rm -rf /tmp/pear
+# COPY ./docker/config/php/99-xdebug.ini /usr/local/etc/php/conf.d/
 
 # Composer
 ## Set environment variables
