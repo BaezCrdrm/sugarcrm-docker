@@ -1,5 +1,8 @@
 sugarcrm:
-  image: intelestream/sugarcrm:latest
+  image: ${DOCKER_REGISTRY-}sugarcrm
+  build: 
+    context: .
+    dockerfile: Dockerfile
   command: apache2-foreground
   links:
     - mysql_crm
@@ -7,12 +10,12 @@ sugarcrm:
   volumes:
     - .:/app
   ports:
-    - "80:80"
+    - "5002:80"
 
 mysql_crm:
-  image: mysql:5.6
+  image: mysql:latest
   ports:
-    - "3307:3306"
+    - "3350:3306"
   environment:
     - MYSQL_ROOT_PASSWORD=sugarcrm
     - MYSQL_USER=sugarcrm
