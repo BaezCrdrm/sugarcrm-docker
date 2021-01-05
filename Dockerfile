@@ -1,4 +1,4 @@
-FROM php:8.0-apache
+FROM php:7.3-apache
 
 # MAINTAINER Ivica Nedeljkovic <ivica.nedeljkovic@gmail.com>
 
@@ -15,19 +15,28 @@ RUN apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev \
+        libpng-dev \
         libc-client-dev \
         libkrb5-dev \
         cron \
+        libzip-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd
+    && docker-php-ext-install gd 
+
+# RUN pecl install mcrypt \
+#     && docker-php-ext-enable mcrypt 
+# RUN docker-php-ext-configure mcrypt --with-mcrypt-dir=/usr/include/
+# RUN docker-php-ext-install -j$(nproc) mcrypt
 
 ## Install imap
 RUN docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
     && docker-php-ext-install imap
 
 ## A few easy to install dependencies
-RUN docker-php-ext-install iconv mcrypt json
+# RUN docker-php-ext-configure mcrypt
+# RUN docker-php-ext-install -j$(nproc) mcrypt
+
+RUN docker-php-ext-install iconv json
 
 ## Install Zip extension and it's dependencies
 RUN apt-get install -y zlib1g zlib1g-dev

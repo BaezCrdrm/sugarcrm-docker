@@ -1,45 +1,48 @@
-sugarcrm:
-  image: ${DOCKER_REGISTRY-}sugarcrm
-  build: 
-    context: .
-    dockerfile: Dockerfile
-  command: apache2-foreground
-  links:
-    - mysql_crm
-    - elasticsearch_crm
-  volumes:
-    - .:/app
-  ports:
-    - "5002:80"
+version: "3.9"
 
-mysql_crm:
-  image: mysql:latest
-  ports:
-    - "3350:3306"
-  environment:
-    - MYSQL_ROOT_PASSWORD=sugarcrm
-    - MYSQL_USER=sugarcrm
-    - MYSQL_PASSWORD=sugarcrm
-    - MYSQL_DATABASE=sugarcrm
-  volumes:
-    - ./docker/config/mysql:/etc/mysql/conf.d
-    - ./docker/data/mysql:/var/lib/mysql
+services:
+  sugarcrm:
+    image: sugarcrm
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: apache2-foreground
+    links:
+      - mysql_crm
+      # - elasticsearch_crm
+    volumes:
+      - .:/app
+    ports:
+      - "5002:80"
 
-elasticsearch_crm:
-  image: elasticsearch:1.4
-  ports:
-    - "9200:9200"
-    - "9300:9300"
-  volumes:
-    - ./docker/config/elasticsearch:/usr/share/elasticsearch/config
+  mysql_crm:
+    image: mysql:latest
+    ports:
+      - "3350:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=sugarcrm
+      - MYSQL_USER=sugarcrm
+      - MYSQL_PASSWORD=sugarcrm
+      - MYSQL_DATABASE=sugarcrm
+    volumes:
+      - ./docker/config/mysql:/etc/mysql/conf.d
+      - ./docker/data/mysql:/var/lib/mysql
 
-phpmyadmin:
-  image: phpmyadmin/phpmyadmin
-  links:
-    - mysql_crm
-  ports:
-    - 8181:80
-  environment:
-    - PMA_HOST=mysql_crm
-    - PMA_USER=sugarcrm
-    - PMA_PASSWORD=sugarcrm
+  # elasticsearch_crm:
+  #   image: elasticsearch:7.10.1
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   volumes:
+  #     - ./docker/config/elasticsearch:/usr/share/elasticsearch/config
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   links:
+  #     - mysql_crm
+  #   ports:
+  #     - 8181:80
+  #   environment:
+  #     - PMA_HOST=mysql_crm
+  #     - PMA_USER=sugarcrm
+  #     - PMA_PASSWORD=sugarcrm
